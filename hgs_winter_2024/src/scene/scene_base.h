@@ -91,7 +91,8 @@ protected:
 		int stage = -1,
 		int panel = -1,
 		bool isHouse = false,
-		bool isPedestrian = false);
+		bool isPedestrian = false,
+		bool isGameOver = false);
 
 protected:
 	// TODO: private に変更

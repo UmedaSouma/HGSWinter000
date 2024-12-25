@@ -108,6 +108,7 @@ HRESULT SceneBase::Init()
 			"assets\\images\\button_left000.png",
 			"assets\\images\\button_right000.png",
 			"assets\\images\\button_up000.png",
+			"assets\\images\\gameover.png",
 		};
 
 		// デバイスの取得
@@ -188,7 +189,8 @@ entt::entity SceneBase::CreatePolygon2D(
 	int stage,
 	int panel,
 	bool isHouse,
-	bool isPedestrian)
+	bool isPedestrian,
+	bool isGameOver)
 {
 	// エンティティの作成
 	auto entity = m_registry.create();
@@ -289,6 +291,11 @@ entt::entity SceneBase::CreatePolygon2D(
 		pedestrian.move = { 0.0f, 0.0f, 0.0f };
 
 		m_registry.emplace<MoveComp>(entity); // 移動
+	}
+
+	if (isGameOver)
+	{
+		m_registry.emplace<GameOverComp>(entity); // ゲームオーバー
 	}
 
 	// 2D ポリゴンの初期設定

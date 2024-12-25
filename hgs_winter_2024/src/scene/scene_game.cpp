@@ -640,6 +640,8 @@ void SceneGame::UpdateSystem(float deltaTime)
 			move.move.x = 0.0f;
 		}
 
+		move.move *= 100.0f;
+
 #ifdef _DEBUG
 #if 0
 		ImGui::Begin("Game Debug");
@@ -658,7 +660,7 @@ void SceneGame::UpdateSystem(float deltaTime)
 
 		move.move = Vec3(0.0f, 0.0f, 0.0f);
 
-		static const float SPEED = 0.5f;
+		static const float SPEED = 0.5f * 75.1110f;
 
 		if (m_doDownMiddle)
 		{
@@ -685,7 +687,7 @@ void SceneGame::UpdateSystem(float deltaTime)
 
 		move.move = Vec3(0.0f, 0.0f, 0.0f);
 
-		static const float SPEED = 0.25f;
+		static const float SPEED = 0.25f * 75.1110f;
 
 		if (m_doDownTop)
 		{
@@ -855,7 +857,7 @@ void SceneGame::UpdateSystem(float deltaTime)
 			auto& move = view.get<MoveComp>(entity);
 			auto& people = view.get<PedestrianComp>(entity);
 
-			static const float SPEED = 0.25f;
+			static const float SPEED = 0.25f * 75.1110f;
 			move.move = Vec3(0.0f, 0.0f, 0.0f);
 
 			if (people.isMove)
@@ -1140,7 +1142,7 @@ void SceneGame::UpdateSystem(float deltaTime)
 			auto& move = view.get<MoveComp>(entity);
 			auto& polygon2d = view.get<Polygon2DComp>(entity);
 
-			move.move *= 4.0f /* 速度 */;
+			move.move *= 2.0f /* 速度 */ * deltaTime;
 			polygon2d.pos += move.move;
 		}
 	}

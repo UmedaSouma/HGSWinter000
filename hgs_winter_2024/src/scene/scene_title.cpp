@@ -11,6 +11,7 @@
 // scene
 #include "scene/scene_title.h"
 #include "scene/scene_tutorial.h"
+#include "scene/scene_game.h"
 // game_manager
 #include "game_manager/game_manager.h"
 // input
@@ -38,117 +39,15 @@ HRESULT SceneTitle::Init()
 		return hr;
 	}
 
-	// 
+	// エンティティの生成
 	{
-		// エンティティの作成
-		auto entity = m_registry.create();
-
-		// コンポーネントの追加
-		m_registry.emplace<Polygon2DComp>(entity); // 2D ポリゴン
-		auto& polygon2d = m_registry.get<Polygon2DComp>(entity);
-
-		// パラメータの設定
-		polygon2d.key = "assets\\images\\title.png";
-		polygon2d.pos = Vec3(SCREEN_WIDTH * HALF, SCREEN_HEIGHT * HALF, 0.0f);
-		polygon2d.rot = Vec3(0.0f, 0.0f, 0.0f);
-		polygon2d.size = Vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
-		polygon2d.col = Color(0xFFFFFFFF);
-
-		// デバイスの取得
-		auto device = GM.GetDevice();
-
-		// テクスチャの読み込み
-		D3DXCreateTextureFromFile(
-			device.Get(),
-			polygon2d.key.c_str(),
-			m_textures[polygon2d.key].GetAddressOf());
-
-		// 頂点バッファの生成
-		hr = device->CreateVertexBuffer(
-			sizeof(Vertex2D) * 4,
-			D3DUSAGE_WRITEONLY,
-			FVF_VERTEX_2D,
-			D3DPOOL_MANAGED,
-			polygon2d.vtxBuf.GetAddressOf(),
-			nullptr);
-		if (FAILED(hr))
-		{
-			return E_FAIL;
-		}
-
-		// 頂点バッファをロック
-		Vertex2D* vtx;
-		hr = polygon2d.vtxBuf->Lock(0U, 0U, reinterpret_cast<void**>(&vtx), 0);
-		assert(SUCCEEDED(hr));
-
-		// 対角線の長さを計算
-		const float length = sqrtf(polygon2d.size.x * polygon2d.size.x + polygon2d.size.y * polygon2d.size.y) * HALF;
-
-		// 対角線の角度を計算
-		const float angle = atan2f(polygon2d.size.x, polygon2d.size.y);
-
-		// 座標の計算
-		float u = 1.0f / static_cast<float>(1.0f);
-		float u1 = static_cast<float>(1) * u;
-		float u2 = static_cast<float>(1 + 1) * u;
-		float v = 1.0f / static_cast<float>(1.0f);
-		float v1 = static_cast<float>(1) * v;
-		float v2 = static_cast<float>(1 + 1) * v;
-
-		// 頂点の設定
-		{ // 左上
-			// 頂点座標の設定
-			float rot = polygon2d.rot.z - (D3DX_PI - angle);
-			vtx[0].pos.x = polygon2d.pos.x + sinf(rot) * length;
-			vtx[0].pos.y = polygon2d.pos.y + cosf(rot) * length;
-			vtx[0].pos.z = 0.0f;
-
-			// テクスチャ座標の設定
-			vtx[0].tex = Vec2(u1, v1);
-		}
-		{ // 右上
-			// 頂点座標の設定
-			float rot = polygon2d.rot.z + (D3DX_PI - angle);
-			vtx[1].pos.x = polygon2d.pos.x + sinf(rot) * length;
-			vtx[1].pos.y = polygon2d.pos.y + cosf(rot) * length;
-			vtx[1].pos.z = 0.0f;
-
-			// テクスチャ座標の設定
-			vtx[1].tex = Vec2(u2, v1);
-		}
-		{ // 左下
-			// 頂点座標の設定
-			float rot = polygon2d.rot.z - angle;
-			vtx[2].pos.x = polygon2d.pos.x + sinf(rot) * length;
-			vtx[2].pos.y = polygon2d.pos.y + cosf(rot) * length;
-			vtx[2].pos.z = 0.0f;
-
-			// テクスチャ座標の設定
-			vtx[2].tex = Vec2(u1, v2);
-		}
-		{ // 右下
-			// 頂点座標の設定
-			float rot = polygon2d.rot.z + angle;
-			vtx[3].pos.x = polygon2d.pos.x + sinf(rot) * length;
-			vtx[3].pos.y = polygon2d.pos.y + cosf(rot) * length;
-			vtx[3].pos.z = 0.0f;
-
-			// テクスチャ座標の設定
-			vtx[3].tex = Vec2(u2, v2);
-		}
-
-		for (int i = 0; i < 4; i++)
-		{
-			// rhw の設定
-			vtx[i].rhw = 1.0f;
-
-			// 頂点カラーの設定
-			vtx[i].col = polygon2d.col;
-		}
-
-		// 頂点バッファをアンロック
-		hr = polygon2d.vtxBuf->Unlock();
-		assert(SUCCEEDED(hr));
+		CreatePolygon2D(
+			"assets\\images\\title.png",
+			Vec3(SCREEN_WIDTH * HALF, SCREEN_HEIGHT * HALF, 0.0f),
+			Vec3(0.0f, 0.0f, 0.0f),
+			Vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f),
+			Color(0xFFFFFFFF),
+			1U, 1U, 1U);
 	}
 
 	return S_OK;
@@ -170,12 +69,6 @@ void SceneTitle::Update(float deltaTime)
 {
 	// 親クラスの処理
 	SceneBase::Update(deltaTime);
-
-	ImGui::Begin("Title");
-
-	ImGui::Text("Title");
-
-	ImGui::End();
 
 	Jing::InputManager& im = Jing::InputManager::GetInstance(); // 入力処理のマネージャー
 	const Jing::Keyboard& keyboard = im.GetKeyboard(); (void)keyboard; // キーボード
@@ -205,7 +98,53 @@ void SceneTitle::Draw() const
 //---------------------------------------------------
 void SceneTitle::UpdateSystem(float deltaTime)
 {
+	// 2D ポリゴンの更新
+	auto view = m_registry.view<Polygon2DComp>();
+	for (auto entity : view)
+	{
+		auto& polygon2d = view.get<Polygon2DComp>(entity);
 
+		// 頂点バッファをロック
+		Vertex2D* pVtx;
+		HRESULT hr = polygon2d.vtxBuf->Lock(0U, 0U, reinterpret_cast<void**>(&pVtx), 0U);
+		assert(SUCCEEDED(hr));
+
+		// 対角線の長さを計算
+		const float length = sqrtf(polygon2d.size.x * polygon2d.size.x + polygon2d.size.y * polygon2d.size.y) * HALF;
+
+		// 対角線の角度を計算
+		const float angle = atan2f(polygon2d.size.x, polygon2d.size.y);
+
+		// 座標の計算
+		float u = 1.0f / static_cast<float>(polygon2d.numU);
+		float u1 = static_cast<float>(polygon2d.nowNumU) * u;
+		float u2 = static_cast<float>(polygon2d.nowNumU + 1) * u;
+		float v = 1.0f / static_cast<float>(polygon2d.numV);
+		float v1 = static_cast<float>(polygon2d.nowNumV) * v;
+		float v2 = static_cast<float>(polygon2d.nowNumV + 1) * v;
+
+		// 頂点座標の設定
+		pVtx[0].pos = Vec3(polygon2d.pos.x + sinf(polygon2d.rot.z - (D3DX_PI - angle)) * length, polygon2d.pos.y + cosf(polygon2d.rot.z - (D3DX_PI - angle)) * length, 0.0f);
+		pVtx[1].pos = Vec3(polygon2d.pos.x + sinf(polygon2d.rot.z + (D3DX_PI - angle)) * length, polygon2d.pos.y + cosf(polygon2d.rot.z + (D3DX_PI - angle)) * length, 0.0f);
+		pVtx[2].pos = Vec3(polygon2d.pos.x + sinf(polygon2d.rot.z - angle) * length, polygon2d.pos.y + cosf(polygon2d.rot.z - angle) * length, 0.0f);
+		pVtx[3].pos = Vec3(polygon2d.pos.x + sinf(polygon2d.rot.z + angle) * length, polygon2d.pos.y + cosf(polygon2d.rot.z + angle) * length, 0.0f);
+
+		// テクスチャ座標の設定
+		pVtx[0].tex = Vec2(u1, v1);
+		pVtx[1].tex = Vec2(u2, v1);
+		pVtx[2].tex = Vec2(u1, v2);
+		pVtx[3].tex = Vec2(u2, v2);
+
+		// 頂点カラーの設定
+		for (int i = 0; i < 4; i++)
+		{
+			pVtx[i].col = polygon2d.col;
+		}
+
+		// 頂点バッファをアンロック
+		hr = polygon2d.vtxBuf->Unlock();
+		assert(SUCCEEDED(hr));
+	}
 }
 
 //---------------------------------------------------
@@ -213,6 +152,7 @@ void SceneTitle::UpdateSystem(float deltaTime)
 //---------------------------------------------------
 void SceneTitle::DrawSystem() const
 {
+	// 2D ポリゴンの描画
 	auto view = m_registry.view<Polygon2DComp>();
 	for (auto entity : view)
 	{
@@ -230,7 +170,7 @@ void SceneTitle::DrawSystem() const
 		device->SetFVF(FVF_VERTEX_2D);
 
 		// テクスチャの設定
-		device->SetTexture(0, texture);
+		device->SetTexture(0U, texture);
 
 		// ポリゴンの描画
 		device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0U, 2U);
@@ -245,6 +185,6 @@ std::shared_ptr<SceneBase> SceneTitle::ChangeScene()
 	// 終了処理
 	Uninit();
 
-	std::shared_ptr<SceneBase> nextScene = std::make_shared<SceneTutorial>();
+	std::shared_ptr<SceneBase> nextScene = std::make_shared<SceneGame>();
 	return nextScene;
 }

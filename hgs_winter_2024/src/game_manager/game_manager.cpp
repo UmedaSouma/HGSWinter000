@@ -82,6 +82,15 @@ void GameManager::Update(float deltaTime)
 
 	// シーンの更新
 	m_scene->Update(deltaTime);
+
+	// Debug
+	{
+		ImGui::Begin("Debug");
+
+		ImGui::Text("test");
+
+		ImGui::End();
+	}
 }
 
 //---------------------------------------------------

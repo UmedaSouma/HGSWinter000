@@ -7,11 +7,6 @@
  **************************************************************/
 #pragma once
 
-/* インクルード */
-#include "scene/elements/camera.h"
-#include "scene/elements/light.h"
-//#include "resource/resource_manager.h"
-
 /** @brief シーンの基底クラス */
 class SceneBase : public std::enable_shared_from_this<SceneBase>
 {
@@ -68,9 +63,27 @@ public:
 	}
 
 protected:
+	/**
+	 * @brief 2D ポリゴンの作成
+	 * @param [in] pos 位置
+	 * @param [in] rot 回転
+	 * @param [in] size サイズ
+	 * @param [in] col 色
+	 * @return エンティティ
+	 */
+	entt::entity CreatePolygon2D(
+		const std::string& key,
+		const Vec3& pos,
+		const Vec3& rot,
+		const Vec3& size,
+		const Color& col,
+		UINT numU,
+		UINT numV,
+		UINT interval);
+
+protected:
 	// TODO: private に変更
 	entt::registry m_registry; //!< エンティティのレジストリ
-	Camera m_camera; //!< カメラ
 	mutable std::map<std::string, ComPtr<IDirect3DTexture9>> m_textures; //!< テクスチャ
 
 private:

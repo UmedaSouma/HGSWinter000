@@ -139,37 +139,37 @@ HRESULT SceneGame::Init()
 		{
 			// 一番下のプレイヤー
 			m_bottomPlayer = CreatePolygon2D(
-				"assets\\images\\title.png",
+				"assets\\images\\santa_anim_00.png",
 				Vec3(200.0f, 600.0f, 0.0f),
 				Vec3(0.0f, 0.0f, 0.0f),
 				Vec3(GAME_SIZE, GAME_SIZE, 0.0f),
 				Color(0xFFFFFFFF),
-				1U, 1U, 1U, 2, 2);
+				3U, 4U, 1U, 2, 2);
 
 			// 中のプレイヤー
 			m_middlePlayer = CreatePolygon2D(
-				"assets\\images\\title.png",
+				"assets\\images\\santa_anim_00.png",
 				Vec3(320.0f, 560.0f, 0.0f),
 				Vec3(0.0f, 0.0f, 0.0f),
 				Vec3(GAME_SIZE, GAME_SIZE, 0.0f),
 				Color(0xFFFFFFFF),
-				1U, 1U, 1U, 1, 1);
+				3U, 4U, 1U, 1, 1);
 
 			// 一番上のプレイヤー
 			m_topPlayer = CreatePolygon2D(
-				"assets\\images\\title.png",
+				"assets\\images\\santa_anim_00.png",
 				Vec3(260.0f, 90.0f, 0.0f),
 				Vec3(0.0f, 0.0f, 0.0f),
 				Vec3(GAME_SIZE, GAME_SIZE, 0.0f),
 				Color(0xFFFFFFFF),
-				1U, 1U, 1U, 0, 0);
+				3U, 4U, 1U, 0, 0);
 		}
 
 		// 通行者の配置
 		{
 			// 一番上の通行者
 			CreatePolygon2D(
-				"assets\\images\\result.png",
+				"assets\\images\\passerby.png",
 				Vec3(540.0f, 180.0f, 0.0f),
 				Vec3(0.0f, 0.0f, 0.0f),
 				Vec3(GAME_SIZE, GAME_SIZE, 0.0f),
@@ -178,7 +178,7 @@ HRESULT SceneGame::Init()
 
 			// 中の通行者
 			CreatePolygon2D(
-				"assets\\images\\result.png",
+				"assets\\images\\passerby.png",
 				Vec3(40.0f, 40.0f + 240.0f, 0.0f),
 				Vec3(0.0f, 0.0f, 0.0f),
 				Vec3(GAME_SIZE, GAME_SIZE, 0.0f),
@@ -187,7 +187,7 @@ HRESULT SceneGame::Init()
 
 			// 一番下の通行者
 			CreatePolygon2D(
-				"assets\\images\\result.png",
+				"assets\\images\\passerby.png",
 				Vec3(60.0f, 200.0f + 240.0f * 2.0f, 0.0f),
 				Vec3(0.0f, 0.0f, 0.0f),
 				Vec3(GAME_SIZE, GAME_SIZE, 0.0f),

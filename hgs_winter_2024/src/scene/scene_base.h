@@ -69,6 +69,13 @@ protected:
 	 * @param [in] rot 回転
 	 * @param [in] size サイズ
 	 * @param [in] col 色
+	 * @param [in] numU X 方向の分割数
+	 * @param [in] numV Y 方向の分割数
+	 * @param [in] interval アニメーション間隔
+	 * @param [in] playerIdx プレイヤーのインデックス
+	 * @param [in] stage ステージ
+	 * @param [in] panel パネル
+	 * @param [in] isHouse おうちかどうか
 	 * @return エンティティ
 	 */
 	entt::entity CreatePolygon2D(
@@ -79,7 +86,12 @@ protected:
 		const Color& col,
 		UINT numU,
 		UINT numV,
-		UINT interval);
+		UINT interval,
+		int playerIdx = -1,
+		int stage = -1,
+		int panel = -1,
+		bool isHouse = false,
+		bool isPedestrian = false);
 
 protected:
 	// TODO: private に変更

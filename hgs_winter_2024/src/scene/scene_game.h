@@ -57,4 +57,25 @@ private:
 	 */
 	std::shared_ptr<SceneBase> ChangeScene() override;
 
+private:
+	entt::entity m_topPlayer; //!< 一番上のプレイヤー
+	entt::entity m_middlePlayer; //!< 中のプレイヤー
+	entt::entity m_bottomPlayer; //!< 一番下のプレイヤー
+
+	bool m_doDownMiddle; //!< 中のプレイヤーが下に移動するかどうか
+	bool m_doUpMiddle; //!< 中のプレイヤーが上に移動するかどうか
+	bool m_doLeftMiddle; //!< 中のプレイヤーが左に移動するかどうか
+	bool m_doRightMiddle; //!< 中のプレイヤーが右に移動するかどうか
+
+	bool m_doDownTop; //!< 一番上のプレイヤーが下に移動するかどうか
+	bool m_doUpTop; //!< 一番上のプレイヤーが上に移動するかどうか
+	bool m_doLeftTop; //!< 一番上のプレイヤーが左に移動するかどうか
+	bool m_doRightTop; //!< 一番上のプレイヤーが右に移動するかどうか
+
+	float m_time; //!< 時間
+
+	bool m_topGameOver; //!< 一番上のプレイヤーがゲームオーバーかどうか
+	bool m_middleGameOver; //!< 中のプレイヤーがゲームオーバーかどうか
+	bool m_bottomGameOver; //!< 一番下のプレイヤーがゲームオーバーかどうか
+
 };

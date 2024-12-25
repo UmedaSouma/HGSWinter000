@@ -184,6 +184,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\resource\font.cpp" />
     <ClCompile Include="src\scene\scene_base.cpp" />
     <ClCompile Include="src\scene\scene_game.cpp" />
     <ClCompile Include="src\scene\scene_result.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="src\ecs\components.h" />
     <ClInclude Include="src\game_manager\game_manager.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\resource\font.h" />
     <ClInclude Include="src\scene\scene_base.h" />
     <ClInclude Include="src\scene\scene_game.h" />
     <ClInclude Include="src\scene\scene_result.h" />

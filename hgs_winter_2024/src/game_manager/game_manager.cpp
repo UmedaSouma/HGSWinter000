@@ -15,6 +15,8 @@
 #include "scene/scene_tutorial.h"
 #include "scene/scene_game.h"
 #include "scene/scene_result.h"
+// resource
+#include "resource/font.h"
 
 //---------------------------------------------------
 // 初期設定
@@ -26,6 +28,17 @@ HRESULT GameManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowed)
 
 	// ランダムの種を設定する
 	srand(static_cast<UINT>(time(nullptr)));
+
+	// フォントの初期設定
+	{
+		auto& fm = FontManager::getInstance();
+		HRESULT hr = fm.init();
+		if (FAILED(hr))
+		{
+			assert(false && "フォントの初期設定に失敗！");
+			return E_FAIL;
+		}
+	}
 
 	// レンダラーの初期設定
 	HRESULT hr = m_renderer.Init(m_hWnd, isWindowed);
@@ -62,6 +75,12 @@ HRESULT GameManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowed)
 //---------------------------------------------------
 void GameManager::Uninit()
 {
+	// フォントの終了処理
+	{
+		auto& fm = FontManager::getInstance();
+		fm.uninit();
+	}
+
 	// シーンの終了処理
 	if (m_scene)
 	{
@@ -82,15 +101,6 @@ void GameManager::Update(float deltaTime)
 
 	// シーンの更新
 	m_scene->Update(deltaTime);
-
-	// Debug
-	{
-		ImGui::Begin("Debug");
-
-		ImGui::Text("test");
-
-		ImGui::End();
-	}
 }
 
 //---------------------------------------------------

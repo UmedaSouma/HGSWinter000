@@ -75,6 +75,24 @@ public:
 	 */
 	ComPtr<IDirect3DDevice9> GetDevice() const { return m_renderer.GetDevice(); }
 
+	/**
+	 * @brief スコアを取得
+	 * @return スコア
+	 */
+	int GetScore() const { return m_score; }
+
+	/**
+	 * @brief スコアを設定
+	 * @param [in] score スコア
+	 */
+	void SetScore(int score) { m_score = score; }
+
+	/**
+	 * @brief スコアを加算
+	 * @param [in] score 加算するスコア
+	 */
+	void AddScore(int score) { m_score += score; }
+
 private:
 	/** @brief コンストラクタ */
 	GameManager();
@@ -93,6 +111,7 @@ private:
 	HINSTANCE m_hInstance; //!< インスタンスハンドル
 	Jing::Renderer m_renderer; //!< レンダラー
 	std::shared_ptr<SceneBase> m_scene; //!< シーン
+	int m_score; //!< スコア
 
 private:
 	friend class SingletonBase<GameManager>;

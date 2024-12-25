@@ -33,11 +33,60 @@ struct TextureAnimComp
 };
 
 /** @brief キャラクター */
-struct CharacterComp
-{
-};
+struct CharaComp {};
+
+/** @brief プレイヤー */
+struct PlayerComp {};
 
 /** @brief 移動 */
+struct MoveComp
+{
+	Vec3 move = { 0.0f, 0.0f, 0.0f }; //!< 移動量
+};
+
+/** @brief 一番上のステージ */
+struct TopStageComp {};
+
+/** @brief 中のステージ */
+struct MiddleStageComp {};
+
+/** @brief 一番下のステージ */
+struct BottomStageComp {};
+
+/** @brief 上方向パネル */
+struct UpPanelComp {};
+
+/** @brief 下方向パネル */
+struct DownPanelComp {};
+
+/** @brief 左方向パネル */
+struct LeftPanelComp {};
+
+/** @brief 右方向パネル */
+struct RightPanelComp {};
+
+/** @brief おうち */
+struct House
+{
+	bool isShines = false; //!< 輝いているかどうか
+	float shineTime = 0.0f; //!< 輝いている時間
+	float coolTime = 0.0f; //!< クールタイム
+};
+
+/** @brief 通行人 */
+struct PedestrianComp
+{
+	float moveTime = 0.0f; //!< 移動時間
+	float coolTime = 0.0f; //!< クールタイム
+	bool isMove = false; //!< 移動中かどうか
+	Vec3 move = { 0.0f, 0.0f, 0.0f }; //!< 移動量
+};
+
+/** @brief 雪 */
+struct Snow
+{
+
+};
 
 
 

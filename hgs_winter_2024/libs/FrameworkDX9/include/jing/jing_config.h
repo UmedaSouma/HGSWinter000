@@ -38,7 +38,7 @@ using GraphicsMaterial = D3DMATERIAL9;
 using Viewport = D3DVIEWPORT9;
 using Surface = LPDIRECT3DSURFACE9;
 using Plane = D3DXPLANE;
-using Font = ID3DXFont;
+//using Font = ID3DXFont;
 
 // Microsoft::WRL
 using Microsoft::WRL::ComPtr;

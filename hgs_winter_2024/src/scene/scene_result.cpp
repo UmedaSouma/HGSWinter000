@@ -17,6 +17,8 @@
 #include "jing/input/input_manager.h"
 // ecs
 #include "ecs/components.h"
+// resource
+#include "resource/font.h"
 
 //---------------------------------------------------
 // コンストラクタ
@@ -49,6 +51,20 @@ HRESULT SceneResult::Init()
 			1U, 1U, 1U);
 	}
 
+	{
+		auto& fm = FontManager::getInstance();
+		DWORD fmt = static_cast<DWORD>(Font::FMT_FLAG::CENTER);
+		std::string score = "Score: " + std::to_string(GM.GetScore());
+
+		auto& currentTime = fm.getFont(FontManager::FONT_TYPE::RESULT_SCORE);
+		currentTime.setText(
+			Vec2(SCREEN_WIDTH * HALF, SCREEN_HEIGHT * HALF),
+			100,
+			Color(1.0f, 1.0f, 1.0f, 1.0f),
+			fmt,
+			score);
+	}
+
 	return S_OK;
 }
 
@@ -79,6 +95,7 @@ void SceneResult::Update(float deltaTime)
 		gamepad.GetButtonTrigger(Jing::Gamepad::ButtonType::A) ||
 		gamepad.GetButtonTrigger(Jing::Gamepad::ButtonType::Start))
 	{
+		GM.SetScore(0);
 		GM.ChangeScene();
 	}
 }
@@ -181,6 +198,20 @@ void SceneResult::DrawSystem() const
 //---------------------------------------------------
 std::shared_ptr<SceneBase> SceneResult::ChangeScene()
 {
+	{
+		auto& fm = FontManager::getInstance();
+		DWORD fmt = static_cast<DWORD>(Font::FMT_FLAG::CENTER);
+
+		std::string score = "";
+		auto& currentTime = fm.getFont(FontManager::FONT_TYPE::RESULT_SCORE);
+		currentTime.setText(
+			Vec2(320.0f, 50.0f),
+			30,
+			Color(1.0f, 1.0f, 1.0f, 1.0f),
+			fmt,
+			score);
+	}
+
 	// 終了処理
 	Uninit();
 

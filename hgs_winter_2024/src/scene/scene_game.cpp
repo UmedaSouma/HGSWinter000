@@ -574,7 +574,7 @@ void SceneGame::Update(float deltaTime)
 	}
 
 	m_time -= deltaTime;
-	if (m_time < 0.0f)
+	if (m_time < 0.0f || m_bottomGameOver)
 	{ // 1分30秒経過
 		m_time = 0.0f;
 		GM.ChangeScene();
@@ -641,13 +641,13 @@ void SceneGame::UpdateSystem(float deltaTime)
 		}
 
 #ifdef _DEBUG
-	#if 0
+#if 0
 		ImGui::Begin("Game Debug");
 		ImGui::Text("Player 1");
 		ImGui::Text("Pos: (%.2f, %.2f)", polygon2d.pos.x, polygon2d.pos.y);
 		ImGui::Text("Move: (%.2f, %.2f)", move.move.x, move.move.y);
 		ImGui::End();
-	#endif
+#endif
 #endif // _DEBUG
 	}
 
@@ -747,32 +747,32 @@ void SceneGame::UpdateSystem(float deltaTime)
 			m_doDownMiddle = false;
 			m_doDownTop = false;
 
-auto view = m_registry.view<Polygon2DComp, DownPanelComp>();
-for (auto entity : view)
-{
-	auto& polygon2d = view.get<Polygon2DComp>(entity);
-	polygon2d.nowNumU = 0U;
-	// 一番下のプレイヤー
-	if (m_registry.valid(m_bottomPlayer))
-	{
-		auto& bottomPolygon2d = m_registry.get<Polygon2DComp>(m_bottomPlayer);
-		if (IsCollisionPanel(bottomPolygon2d.pos, bottomPolygon2d.size, polygon2d.pos, polygon2d.size))
-		{
-			m_doDownMiddle = true;
-			polygon2d.nowNumU = 1U;
-		}
-	}
-	// 中のプレイヤー
-	if (m_registry.valid(m_middlePlayer))
-	{
-		auto& middlePolygon2d = m_registry.get<Polygon2DComp>(m_middlePlayer);
-		if (IsCollisionPanel(middlePolygon2d.pos, middlePolygon2d.size, polygon2d.pos, polygon2d.size))
-		{
-			m_doDownTop = true;
-			polygon2d.nowNumU = 1U;
-		}
-	}
-}
+			auto view = m_registry.view<Polygon2DComp, DownPanelComp>();
+			for (auto entity : view)
+			{
+				auto& polygon2d = view.get<Polygon2DComp>(entity);
+				polygon2d.nowNumU = 0U;
+				// 一番下のプレイヤー
+				if (m_registry.valid(m_bottomPlayer))
+				{
+					auto& bottomPolygon2d = m_registry.get<Polygon2DComp>(m_bottomPlayer);
+					if (IsCollisionPanel(bottomPolygon2d.pos, bottomPolygon2d.size, polygon2d.pos, polygon2d.size))
+					{
+						m_doDownMiddle = true;
+						polygon2d.nowNumU = 1U;
+					}
+				}
+				// 中のプレイヤー
+				if (m_registry.valid(m_middlePlayer))
+				{
+					auto& middlePolygon2d = m_registry.get<Polygon2DComp>(m_middlePlayer);
+					if (IsCollisionPanel(middlePolygon2d.pos, middlePolygon2d.size, polygon2d.pos, polygon2d.size))
+					{
+						m_doDownTop = true;
+						polygon2d.nowNumU = 1U;
+					}
+				}
+			}
 		}
 
 		// 左向きパネル
@@ -931,6 +931,15 @@ for (auto entity : view)
 				if (IsCollisionPanel(polygon2d.pos, polygon2d.size, topPolygon2d.pos, topPolygon2d.size))
 				{
 					m_topGameOver = true;
+
+					// GameOver
+					CreatePolygon2D(
+						"assets\\images\\gameover.png",
+						Vec3(320.0f, 120.0f, 0.0f),
+						Vec3(0.0f, 0.0f, 0.0f),
+						Vec3(640.0f, 240.0f, 0.0f),
+						Color(0xFFFFFFFF),
+						1U, 1U, 1U, -1, -1, -1, false, false, true);
 				}
 			}
 
@@ -941,6 +950,15 @@ for (auto entity : view)
 				if (IsCollisionPanel(polygon2d.pos, polygon2d.size, middlePolygon2d.pos, middlePolygon2d.size))
 				{
 					m_middleGameOver = true;
+
+					// GameOver
+					CreatePolygon2D(
+						"assets\\images\\gameover.png",
+						Vec3(320.0f, 360.0f, 0.0f),
+						Vec3(0.0f, 0.0f, 0.0f),
+						Vec3(640.0f, 240.0f, 0.0f),
+						Color(0xFFFFFFFF),
+						1U, 1U, 1U, -1, -1, -1, false, false, true);
 				}
 			}
 
@@ -951,6 +969,15 @@ for (auto entity : view)
 				if (IsCollisionPanel(polygon2d.pos, polygon2d.size, bottomPolygon2d.pos, bottomPolygon2d.size))
 				{
 					m_bottomGameOver = true;
+
+					// GameOver
+					CreatePolygon2D(
+						"assets\\images\\gameover.png",
+						Vec3(320.0f, 600.0f, 0.0f),
+						Vec3(0.0f, 0.0f, 0.0f),
+						Vec3(640.0f, 240.0f, 0.0f),
+						Color(0xFFFFFFFF),
+						1U, 1U, 1U, -1, -1, -1, false, false, true);
 				}
 			}
 		}
@@ -1056,7 +1083,7 @@ for (auto entity : view)
 
 				polygon2d.nowNumU = 1;
 
-				
+
 			}
 			else
 			{
@@ -1085,7 +1112,6 @@ for (auto entity : view)
 				{
 					if (IsCollisionPanel(polygon2d.pos, polygon2d.size, m_registry.get<Polygon2DComp>(m_middlePlayer).pos, m_registry.get<Polygon2DComp>(m_middlePlayer).size))
 					{
-
 						house.isShines = true;
 						house.shineTime = 500.0f;
 						GM.AddScore(5);
@@ -1176,27 +1202,55 @@ for (auto entity : view)
 void SceneGame::DrawSystem() const
 {
 	// 2D ポリゴンの描画
-	auto view = m_registry.view<Polygon2DComp>();
-	for (auto entity : view)
 	{
-		const Polygon2DComp& polygon2D = view.get<Polygon2DComp>(entity);
+		auto view = m_registry.view<Polygon2DComp>();
+		for (auto entity : view)
+		{
+			const Polygon2DComp& polygon2D = view.get<Polygon2DComp>(entity);
 
-		// デバイスの取得
-		auto device = GM.GetDevice();
+			// デバイスの取得
+			auto device = GM.GetDevice();
 
-		Texture texture = m_textures[polygon2D.key].Get();
+			Texture texture = m_textures[polygon2D.key].Get();
 
-		// 頂点バッファをデータストリームに設定
-		device->SetStreamSource(0U, polygon2D.vtxBuf.Get(), 0U, sizeof(Vertex2D));
+			// 頂点バッファをデータストリームに設定
+			device->SetStreamSource(0U, polygon2D.vtxBuf.Get(), 0U, sizeof(Vertex2D));
 
-		// 頂点フォーマットの設定
-		device->SetFVF(FVF_VERTEX_2D);
+			// 頂点フォーマットの設定
+			device->SetFVF(FVF_VERTEX_2D);
 
-		// テクスチャの設定
-		device->SetTexture(0U, texture);
+			// テクスチャの設定
+			device->SetTexture(0U, texture);
 
-		// ポリゴンの描画
-		device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0U, 2U);
+			// ポリゴンの描画
+			device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0U, 2U);
+		}
+	}
+
+	// GameOver 表示
+	{
+		auto view = m_registry.view<Polygon2DComp, GameOverComp>();
+		for (auto entity : view)
+		{
+			const Polygon2DComp& polygon2D = view.get<Polygon2DComp>(entity);
+
+			// デバイスの取得
+			auto device = GM.GetDevice();
+
+			Texture texture = m_textures[polygon2D.key].Get();
+
+			// 頂点バッファをデータストリームに設定
+			device->SetStreamSource(0U, polygon2D.vtxBuf.Get(), 0U, sizeof(Vertex2D));
+
+			// 頂点フォーマットの設定
+			device->SetFVF(FVF_VERTEX_2D);
+
+			// テクスチャの設定
+			device->SetTexture(0U, texture);
+
+			// ポリゴンの描画
+			device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0U, 2U);
+		}
 	}
 }
 

@@ -82,6 +82,12 @@ struct PedestrianComp
 	Vec3 move = { 0.0f, 0.0f, 0.0f }; //!< 移動量
 };
 
+/** @brief GameOver */
+struct GameOverComp
+{
+
+};
+
 /** @brief 雪 */
 struct Snow
 {

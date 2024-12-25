@@ -135,6 +135,39 @@ HRESULT SceneGame::Init()
 
 	// エンティティの生成
 	{
+		// チュートリアル
+		{
+			CreatePolygon2D(
+				"assets\\images\\tutorial000.png",
+				Vec3(SCREEN_WIDTH * HALF + 320.0f, SCREEN_HEIGHT * HALF, 0.0f),
+				Vec3(0.0f, 0.0f, 0.0f),
+				Vec3(640.0f, 720.0f, 0.0f),
+				Color(1.0f, 1.0f, 1.0f, 1.0f),
+				1U, 1U, 1U);
+		}
+
+		// 雪
+		{
+			//int num = RandomGenerator::Get(5, 7);
+			for (int i = 0; i < 30; i++)
+			{
+				auto entity = CreatePolygon2D(
+					"assets\\images\\snow.png",
+					Vec3(RandomGenerator::Get(0.0f, SCREEN_WIDTH * HALF), -10.0f, 0.0f),
+					Vec3(0.0f, 0.0f, 0.0f),
+					Vec3(10.0f, 10.0f, 0.0f),
+					Color(0xFFFFFFFF),
+					1U, 1U, 1U);
+
+				m_registry.emplace<MoveComp>(entity);
+				m_registry.emplace<SnowComp>(entity);
+
+				auto& snow = m_registry.get<SnowComp>(entity);
+				snow.move.x = RandomGenerator::Get(-50.0f, 50.0f);
+				snow.move.y = RandomGenerator::Get(100.0f, 300.0f);
+			}
+		}
+
 		// プレイヤー
 		{
 			// 一番下のプレイヤー
@@ -521,7 +554,7 @@ HRESULT SceneGame::Init()
 			Vec3(SCREEN_WIDTH * HALF, SCREEN_HEIGHT * HALF, 0.0f),
 			Vec3(0.0f, 0.0f, 0.0f),
 			Vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f),
-			Color(0xFFFFFFFF),
+			Color(188.0f / 255.0f, 234.0f / 255.0f, 1.0f, 1.0f),
 			1U, 1U, 1U);
 	}
 
@@ -985,6 +1018,21 @@ void SceneGame::UpdateSystem(float deltaTime)
 		}
 	}
 
+	// 雪の更新
+	{
+		auto view = m_registry.view<Polygon2DComp, SnowComp>();
+		for (auto entity : view)
+		{
+			auto& polygon2d = view.get<Polygon2DComp>(entity);
+			auto& snow = view.get<SnowComp>(entity);
+			polygon2d.pos += snow.move * deltaTime;
+			if (polygon2d.pos.y > 720.0f)
+			{
+				polygon2d.pos.y = -10.0f;
+			}
+		}
+	}
+
 	// ステージごとの移動の制限
 	{
 		// 一番上
@@ -1099,7 +1147,7 @@ void SceneGame::UpdateSystem(float deltaTime)
 				polygon2d.nowNumU = 0;
 
 				// 一番上のプレイヤー
-				if (m_registry.valid(m_topPlayer))
+				if (m_registry.valid(m_topPlayer) && !m_topGameOver)
 				{
 					if (IsCollisionPanel(polygon2d.pos, polygon2d.size, m_registry.get<Polygon2DComp>(m_topPlayer).pos, m_registry.get<Polygon2DComp>(m_topPlayer).size))
 					{
@@ -1110,7 +1158,7 @@ void SceneGame::UpdateSystem(float deltaTime)
 				}
 
 				// 中のプレイヤー
-				if (m_registry.valid(m_middlePlayer))
+				if (m_registry.valid(m_middlePlayer) && !m_middleGameOver)
 				{
 					if (IsCollisionPanel(polygon2d.pos, polygon2d.size, m_registry.get<Polygon2DComp>(m_middlePlayer).pos, m_registry.get<Polygon2DComp>(m_middlePlayer).size))
 					{
@@ -1121,7 +1169,7 @@ void SceneGame::UpdateSystem(float deltaTime)
 				}
 
 				// 一番下のプレイヤー
-				if (m_registry.valid(m_bottomPlayer))
+				if (m_registry.valid(m_bottomPlayer) && !m_bottomGameOver)
 				{
 					if (IsCollisionPanel(polygon2d.pos, polygon2d.size, m_registry.get<Polygon2DComp>(m_bottomPlayer).pos, m_registry.get<Polygon2DComp>(m_bottomPlayer).size))
 					{

@@ -111,6 +111,11 @@ HRESULT SceneBase::Init()
 			"assets\\images\\gameover.png",
 			"assets\\images\\passerby.png",
 			"assets\\images\\santa_anim_00.png",
+			"assets\\images\\snow.png",
+			"assets\\images\\start000.png",
+			"assets\\images\\title000.png",
+			"assets\\images\\titlebackground000.png",
+			"assets\\images\\tutorial000.png",
 		};
 
 		// デバイスの取得

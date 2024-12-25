@@ -42,7 +42,23 @@ HRESULT SceneTitle::Init()
 	// エンティティの生成
 	{
 		CreatePolygon2D(
-			"assets\\images\\title.png",
+			"assets\\images\\start000.png",
+			Vec3(SCREEN_WIDTH * HALF, 580.0f, 0.0f),
+			Vec3(0.0f, 0.0f, 0.0f),
+			Vec3(640.0f, 200.0f, 0.0f),
+			Color(0xFFFFFFFF),
+			1U, 1U, 1U);
+
+		CreatePolygon2D(
+			"assets\\images\\title000.png",
+			Vec3(SCREEN_WIDTH * HALF, 100.0f, 0.0f),
+			Vec3(0.0f, 0.0f, 0.0f),
+			Vec3(669.0f, 268.0f, 0.0f),
+			Color(0xFFFFFFFF),
+			1U, 1U, 1U);
+
+		CreatePolygon2D(
+			"assets\\images\\titlebackground000.png",
 			Vec3(SCREEN_WIDTH * HALF, SCREEN_HEIGHT * HALF, 0.0f),
 			Vec3(0.0f, 0.0f, 0.0f),
 			Vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f),

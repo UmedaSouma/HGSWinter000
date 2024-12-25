@@ -89,9 +89,9 @@ struct GameOverComp
 };
 
 /** @brief 雪 */
-struct Snow
+struct SnowComp
 {
-
+	Vec3 move = { 0.0f, 0.0f, 0.0f }; //!< 移動量
 };
 
 

@@ -17,6 +17,7 @@
 #include "scene/scene_result.h"
 // resource
 #include "resource/font.h"
+#include "resource/sound.h"
 
 //---------------------------------------------------
 // 初期設定
@@ -67,6 +68,9 @@ HRESULT GameManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowed)
 		}
 	}
 
+	//InitSound(m_hWnd);
+	//PlaySound(SOUND_LABEL_MAIN_BGM);
+
 	return S_OK;
 }
 
@@ -75,6 +79,9 @@ HRESULT GameManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowed)
 //---------------------------------------------------
 void GameManager::Uninit()
 {
+	//StopSound();
+	//UninitSound();
+
 	// フォントの終了処理
 	{
 		auto& fm = FontManager::getInstance();

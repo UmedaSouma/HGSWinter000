@@ -1128,7 +1128,7 @@ void SceneGame::UpdateSystem(float deltaTime)
 				if (house.shineTime <= 0.0f)
 				{
 					house.isShines = false;
-					house.coolTime = RandomGenerator::Get(3.0f, 5.0f);
+					house.coolTime = RandomGenerator::Get(5.0f, 7.0f);
 				}
 
 				polygon2d.nowNumU = 1;

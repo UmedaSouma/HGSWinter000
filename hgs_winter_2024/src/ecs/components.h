@@ -32,4 +32,14 @@ struct TextureAnimComp
 {
 };
 
+/** @brief キャラクター */
+struct CharacterComp
+{
+};
+
+/** @brief 移動 */
+
+
+
+
 

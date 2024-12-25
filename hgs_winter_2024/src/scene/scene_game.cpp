@@ -41,12 +41,22 @@ HRESULT SceneGame::Init()
 	// エンティティの生成
 	{
 		CreatePolygon2D(
+			"assets\\images\\dot_house_00.png",
+			Vec3(100.0f, 100.0f, 0.0f),
+			Vec3(0.0f, 0.0f, 0.0f),
+			Vec3(64.0f, 64.0f, 0.0f),
+			Color(0xFFFFFFFF),
+			1U, 1U, 1U);
+
+		CreatePolygon2D(
 			"assets\\images\\game_bg.png",
 			Vec3(SCREEN_WIDTH * HALF, SCREEN_HEIGHT * HALF, 0.0f),
 			Vec3(0.0f, 0.0f, 0.0f),
 			Vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f),
 			Color(0xFFFFFFFF),
 			1U, 1U, 1U);
+
+	
 	}
 
 	return S_OK;

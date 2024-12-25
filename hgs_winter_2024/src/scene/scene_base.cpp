@@ -37,6 +37,7 @@ HRESULT SceneBase::Init()
 			"assets\\images\\title.png",
 			"assets\\images\\game_bg.png",
 			"assets\\images\\result.png",
+			"assets\\images\\dot_house_00.png",
 		};
 
 		// デバイスの取得
